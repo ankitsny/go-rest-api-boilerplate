@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
 )
 
@@ -21,16 +22,20 @@ func main() {
 	// TODO: Connect redis store, app level
 
 	// TODO: Create logger instance? if required
+	logger := logrus.New()
 
 	// start the server
 	address := fmt.Sprintf(":%v", app.Config.ServerPort)
 	log.Printf("server %v is started at %v\n", app.Version, address)
-	panic(http.ListenAndServe(address, buildRoutes()))
+	panic(http.ListenAndServe(address, buildRoutes(logger)))
 }
 
-func buildRoutes() *mux.Router {
+func buildRoutes(l *logrus.Logger) *mux.Router {
 	// create instance of mux router
 	r := mux.NewRouter()
+
+	// All middleware goes here
+	// r.Use(MIDDLEWARE_FUNCTION)
 
 	// Initialize not found handler
 	r.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
