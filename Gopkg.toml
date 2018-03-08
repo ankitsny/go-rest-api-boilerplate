@@ -23,3 +23,7 @@
 [[constraint]]
   branch = "v2"
   name = "gopkg.in/mgo.v2"
+
+[[constraint]]
+  name = "github.com/gorilla/mux"
+  version = "1.6.1"
