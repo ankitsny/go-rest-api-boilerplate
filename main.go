@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"goapi/app"
 	"log"
 	"net/http"
 
@@ -10,7 +11,10 @@ import (
 
 func main() {
 
-	// TODO: load app configs here
+	// INFO: load app configs here
+	if err := app.LoadConfig("./config"); err != nil {
+		panic(fmt.Errorf("Invalid application configuration: %s", err))
+	}
 
 	// TODO: Connect to database, app level
 
@@ -19,8 +23,8 @@ func main() {
 	// TODO: Create logger instance? if required
 
 	// start the server
-	address := fmt.Sprintf(":%v", 8080)                    // get the port number from the app config
-	log.Printf("server %v is started at %v\n", 1, address) // get the app version from the app config
+	address := fmt.Sprintf(":%v", app.Config.ServerPort)
+	log.Printf("server %v is started at %v\n", app.Version, address)
 	panic(http.ListenAndServe(address, buildRoutes()))
 }
 

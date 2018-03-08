@@ -1,0 +1,16 @@
+# The Data Source Name for the database
+# Make sure you override this in production with the environment variable: RESTFUL_DSN
+dsn: "mongodb://localhost/goapi"
+
+# These are secret keys used for JWT signing and verification.
+#   RESTFUL_JWT_VERIFICATION_KEY
+#   RESTFUL_JWT_SIGNING_KEY
+jwt_verification_key: "ASDFGHJKLQWERTYUIOPMNBVCXQWSDXCYHJN12345"
+jwt_signing_key: "ASDFGHJKLQWERTYUqwdewd356e2398372892"
+
+# Uncomment the following line and set an appropriate JWT signing method, if needed
+# The default signing method is HS256.
+#jwt_signing_method: "HS256"
+
+# Default server_port: "8080"
+#server_port: "8081"
