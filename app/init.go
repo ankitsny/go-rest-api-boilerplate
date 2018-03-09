@@ -1,5 +1,11 @@
 package app
 
+import (
+	"net/http"
+
+	"github.com/gorilla/context"
+)
+
 // Init
 // func Init(logger *logrus.Logger) http.Handler {
 // 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -14,3 +20,8 @@ package app
 // 		logAccess(rc, ac.Infof, ac.Now())
 // 	})
 // }
+
+// GetRequestScope returns the RequestScope of the current request.
+func GetRequestScope(r *http.Request) RequestScope {
+	return context.Get(r, "Context").(RequestScope)
+}
