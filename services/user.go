@@ -53,6 +53,7 @@ func (s *UserService) Update(rs app.RequestScope, email string, model *models.Us
 	if err := s.dao.Update(rs, email, model); err != nil {
 		return nil, err
 	}
+
 	return s.dao.Get(rs, email)
 }
 

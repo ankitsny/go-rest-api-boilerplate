@@ -31,11 +31,14 @@ func (dao *UserDAO) Create(rs app.RequestScope, user *models.User) error {
 }
 
 // Update saves the changes to an user in the database.
-func (dao *UserDAO) Update(rs app.RequestScope, email string, user *models.User) error {
+func (dao *UserDAO) Update(rs app.RequestScope, email string, user *models.User) (*models.User, error) {
 	if _, err := dao.Get(rs, email); err != nil {
-		return err
+		return nil, err
 	}
-	return rs.DB().C("users").Update(bson.M{"email": email}, bson.M{"$set": user})
+	if err := rs.DB().C("users").Update(bson.M{"email": email}, bson.M{"$set": user}); err != nil {
+		return nil, err
+	}
+	return dao.Get(rs, email)
 }
 
 // Delete deletes an user with the specified email from the database.

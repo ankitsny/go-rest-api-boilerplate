@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"goapi/apis"
 	"goapi/app"
+	"goapi/daos"
 	"log"
 	"net/http"
 
@@ -43,6 +45,9 @@ func buildRoutes(l *logrus.Logger) *mux.Router {
 		w.Write([]byte("Rosource not found"))
 	})
 
+	// Creates request scope
+	r.Use(app.Init)
+
 	// Set path prefix/route group
 	r.PathPrefix("v1")
 
@@ -50,6 +55,9 @@ func buildRoutes(l *logrus.Logger) *mux.Router {
 		w.WriteHeader(200)
 		fmt.Fprintf(w, "Hello World")
 	}).Methods("GET")
+
+	userDao := daos.NewUserDao()
+	apis.ServeUserResource(r, userDao)
 
 	return r
 }

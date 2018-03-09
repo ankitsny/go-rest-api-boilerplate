@@ -17,14 +17,16 @@ type RequestScope interface {
 	SetUserID(id string)
 	// RequestID returns the ID of the current request
 	RequestID() string
-	// Tx returns the currently active database transaction that can be used for DB query purpose
+	// DB returns the currently active database transaction that can be used for DB query purpose
 	DB() *mgo.Database
+	// DB returns the currently active database transaction that can be used for DB query purpose
+	SetDB()
 	// Now returns the timestamp representing the time when the request is being processed
 	Now() time.Time
 	// Set All params
-	SetParams(params map[interface{}]interface{})
+	SetParams(params map[string]string)
 	// Get All Params
-	GetParams() map[interface{}]interface{}
+	GetParams() map[string]string
 	// SetBody
 	SetBody(body []byte)
 	// GetBody
@@ -32,13 +34,13 @@ type RequestScope interface {
 }
 
 type requestScope struct {
-	Logger                                // the logger tagged with the current request information
-	now       time.Time                   // the time when the request is being processed
-	requestID string                      // an ID identifying one or multiple correlated HTTP requests
-	userID    string                      // an ID identifying the current user
-	db        *mgo.Database               // Database object
-	params    map[interface{}]interface{} // url Params Params
-	body      []byte                      // Body
+	Logger                      // the logger tagged with the current request information
+	now       time.Time         // the time when the request is being processed
+	requestID string            // an ID identifying one or multiple correlated HTTP requests
+	userID    string            // an ID identifying the current user
+	db        *mgo.Database     // Database object
+	params    map[string]string // url Params Params
+	body      []byte            // Body
 }
 
 func (rs *requestScope) UserID() string {
@@ -62,11 +64,19 @@ func (rs *requestScope) DB() *mgo.Database {
 	return rs.db
 }
 
-func (rs *requestScope) SetParams(params map[interface{}]interface{}) {
+func (rs *requestScope) SetDB() {
+	session, err := mgo.Dial("mongodb://localhost:27017")
+	if err != nil {
+		panic(err)
+	}
+	rs.db = session.DB("myDb")
+}
+
+func (rs *requestScope) SetParams(params map[string]string) {
 	rs.params = params
 }
 
-func (rs *requestScope) GetParams() map[interface{}]interface{} {
+func (rs *requestScope) GetParams() map[string]string {
 	return rs.params
 }
 
