@@ -35,7 +35,6 @@ func (ur *userResource) get(w http.ResponseWriter, r *http.Request) {
 	rs := app.GetRequestScope(r)
 	email := rs.GetParams()["email"]
 	response, err := ur.service.Get(rs, email)
-	fmt.Println(err)
 	if err != nil {
 		fmt.Fprintf(w, "Err")
 		return
