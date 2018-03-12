@@ -1,6 +1,10 @@
 package models
 
-import "gopkg.in/mgo.v2/bson"
+import (
+	"errors"
+
+	"gopkg.in/mgo.v2/bson"
+)
 
 // User :
 type User struct {
@@ -18,5 +22,9 @@ func (u User) Validate() error {
 	// Use ozzo-validation lib, or write custom validation here
 
 	// INFO: return nil for now
+
+	if u.Email == "" {
+		return errors.New("Email can't be empty")
+	}
 	return nil
 }

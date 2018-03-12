@@ -8,6 +8,12 @@
   version = "v1.0.4"
 
 [[projects]]
+  name = "github.com/davecgh/go-spew"
+  packages = ["spew"]
+  revision = "346938d642f2ec3594ed81d874461961cd0faa76"
+  version = "v1.1.0"
+
+[[projects]]
   name = "github.com/fsnotify/fsnotify"
   packages = ["."]
   revision = "c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9"
@@ -66,6 +72,12 @@
   version = "v1.1.0"
 
 [[projects]]
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+  version = "v1.0.0"
+
+[[projects]]
   name = "github.com/spf13/afero"
   packages = [
     ".",
@@ -99,6 +111,12 @@
   version = "v1.0.0"
 
 [[projects]]
+  name = "github.com/stretchr/testify"
+  packages = ["assert"]
+  revision = "12b6f73e6084dad08a7c6e575284b177ecafbc71"
+  version = "v1.2.1"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
@@ -130,8 +148,11 @@
   branch = "v2"
   name = "gopkg.in/mgo.v2"
   packages = [
+    ".",
     "bson",
-    "internal/json"
+    "internal/json",
+    "internal/sasl",
+    "internal/scram"
   ]
   revision = "3f83fa5005286a7fe593b055f0d7771a7dce4655"
 
@@ -144,6 +165,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "92ad64dd61dc8c5bd7a89b1cc72a28bd94875642c223bfdbb98659d9fb623315"
+  inputs-digest = "38265b73a0671538d0ead3f3c7921343a9984fdc557802eb13acbc67cb360146"
   solver-name = "gps-cdcl"
   solver-version = 1
