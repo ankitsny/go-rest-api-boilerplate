@@ -58,7 +58,7 @@ func (ur *userResource) create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "POST")
+	fmt.Fprintf(w, "Done")
 }
 
 func (ur *userResource) update(w http.ResponseWriter, r *http.Request) {
@@ -66,12 +66,21 @@ func (ur *userResource) update(w http.ResponseWriter, r *http.Request) {
 	var x *models.User
 	json.Unmarshal(rs.GetBody(), &x)
 	u, err := ur.service.Update(rs, rs.GetParams()["email"], x)
-	fmt.Println(err)
+	if err != nil {
+		fmt.Println("err")
+		fmt.Fprintf(w, "Failed to update")
+		return
+	}
 	fmt.Printf("%+v", u)
 	fmt.Fprintf(w, "update")
 }
 
 func (ur *userResource) delete(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("delete")
+	rs := app.GetRequestScope(r)
+	if err := ur.service.Delete(rs, rs.GetParams()["email"]); err != nil {
+		fmt.Fprintf(w, err.Error())
+		return
+	}
 	fmt.Fprintf(w, "delete")
 }

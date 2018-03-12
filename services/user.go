@@ -35,14 +35,11 @@ func (s *UserService) Get(rs app.RequestScope, email string) (*models.User, erro
 }
 
 // Create creates a new user.
-func (s *UserService) Create(rs app.RequestScope, model *models.User) (*models.User, error) {
+func (s *UserService) Create(rs app.RequestScope, model *models.User) error {
 	if err := model.Validate(); err != nil {
-		return nil, err
+		return err
 	}
-	if err := s.dao.Create(rs, model); err != nil {
-		return nil, err
-	}
-	return s.dao.Get(rs, model.Email)
+	return s.dao.Create(rs, model)
 }
 
 // Update updates the user with the specified email.
@@ -50,21 +47,21 @@ func (s *UserService) Update(rs app.RequestScope, email string, model *models.Us
 	if err := model.Validate(); err != nil {
 		return nil, err
 	}
-	if err := s.dao.Update(rs, email, model); err != nil {
-		return nil, err
-	}
-
-	return s.dao.Get(rs, email)
-}
-
-// Delete deletes the user with the specified email.
-func (s *UserService) Delete(rs app.RequestScope, email string) (*models.User, error) {
-	user, err := s.dao.Get(rs, email)
+	err := s.dao.Update(rs, email, model)
 	if err != nil {
 		return nil, err
 	}
-	err = s.dao.Delete(rs, email)
-	return user, err
+	return s.Get(rs, email)
+}
+
+// Delete deletes the user with the specified email.
+func (s *UserService) Delete(rs app.RequestScope, email string) error {
+	_, err := s.dao.Get(rs, email)
+	if err != nil {
+		return err
+	}
+	return s.dao.Delete(rs, email)
+
 }
 
 // Count returns the number of users.

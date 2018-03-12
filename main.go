@@ -5,6 +5,7 @@ import (
 	"goapi/apis"
 	"goapi/app"
 	"goapi/daos"
+	"goapi/services"
 	"log"
 	"net/http"
 
@@ -57,7 +58,7 @@ func buildRoutes(l *logrus.Logger) *mux.Router {
 	}).Methods("GET")
 
 	userDao := daos.NewUserDao()
-	apis.ServeUserResource(r, userDao)
+	apis.ServeUserResource(r, services.NewUserService(userDao))
 
 	return r
 }
