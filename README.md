@@ -14,3 +14,5 @@
 # Test
 
 *Still under progress*
+
+- run `go test ./... [-cover]` 
