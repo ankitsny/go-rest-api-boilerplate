@@ -41,3 +41,71 @@
 - `[Resource]Service` struct **must** implement the `[resource]DAO` interface
 
 -----
+
+# Test
+
+## Steps to write test for the service
+
+> For assertion assert `"github.com/stretchr/testify/assert"` package has been used.
+
+- Mock `[resource]DAO` by creating a `struct` with list of records. </br>`e.g.`
+    ```
+    // for user resource
+    type mockUserDAO struct {
+	    records []models.User
+    }
+    ```
+- Create a function, with return type of `[resource]DAO`, this function should return instance of `[resource]DAO`. </br>`e.g.`
+    ```
+    // Data store
+    func newMockUserDAO() userDAO {
+        return &mockUserDAO{
+            records: []models.User{
+                {ID: "5a947f3a14032d3b384b0829", FirstName: "aaa", Email: "anks@anks.com"},
+                {ID: "5a947f3a14032d3b384b0829", FirstName: "bbb", Email: "anso@ankso.com"},
+                {ID: "5a947f3a14032d3b384b0829", FirstName: "ccc", Email: "yeah@yess.com"},
+            },
+        }
+    }
+    ```
+
+- Implement all `DAO` interface methods. </br>`e.g.`
+    ```
+    func (m *mockUserDAO) Get(rs app.RequestScope, email string) (*models.User, error) {
+        for _, record := range m.records {
+            if record.Email == email {
+                return &record, nil
+            }
+        }
+        return nil, errors.New("not found")
+    }
+    // Implment rest of the methods
+    ```
+
+- Then test the service `newUserService`.</br>`e.g.`
+    ```
+    func TestNewUserService(t *testing.T) {
+        dao := newMockUserDAO()
+        s := NewUserService(dao)
+        assert.Equal(t, dao, s.dao)
+    }
+    ```
+
+- Then write test cases for the all service functions `TestNewUserService_(Get|Create|Count|Delete|...)` </br> `e.g.`
+    ```
+    func TestNewUserService_Get(t *testing.T) {
+        s := NewUserService(newMockUserDAO())
+
+        // Valid User
+        user, err := s.Get(nil, "anks@anks.com")
+        if assert.Nil(t, err) && assert.NotNil(t, user) {
+            assert.Equal(t, user.FirstName, "aaa")
+        }
+
+        user, err = s.Get(nil, "anks1@anks.com")
+        assert.NotNil(t, err)
+        // Similarly we can write test for all func
+    }
+    ```
+
+----
