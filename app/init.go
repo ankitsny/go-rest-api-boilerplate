@@ -27,20 +27,23 @@ import (
 // 	})
 // }
 
-func Init(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		now := time.Now()
-		logger := logrus.New()
-		ac := newRequestScope(now, logger, r)
-		ac.SetDB()
-		b, _ := ioutil.ReadAll(r.Body)
-		ac.SetBody(b)
-		context.Set(r, "Context", ac)
-		ac.SetParams(mux.Vars(r))
-		defer ac.DB().Session.Close()
-		next.ServeHTTP(w, r)
-		return
-	})
+// Init :
+func Init(logger *logrus.Logger) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			now := time.Now()
+			ac := newRequestScope(now, logger, r)
+			ac.SetDB()
+			b, _ := ioutil.ReadAll(r.Body)
+			ac.SetBody(b)
+			context.Set(r, "Context", ac)
+			ac.SetParams(mux.Vars(r))
+			defer ac.DB().Session.Close()
+			next.ServeHTTP(w, r)
+			// TODO: Print access log here
+			return
+		})
+	}
 }
 
 // GetRequestScope returns the RequestScope of the current request.
