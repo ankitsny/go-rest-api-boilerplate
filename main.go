@@ -8,6 +8,7 @@ import (
 	"goapi/services"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
@@ -46,8 +47,18 @@ func buildRoutes(l *logrus.Logger) *mux.Router {
 		w.Write([]byte("Rosource not found"))
 	})
 
+	// Create Logger Instance
+	logger := logrus.New()
+	// Replace os.Stdout to some other io.Writer type
+	logger.Out = os.Stdout
+	// Set log level
+	logger.SetLevel(logrus.DebugLevel)
+
+	// set all logger configs here
+	// log to file or stdout
+
 	// Creates request scope
-	r.Use(app.Init)
+	r.Use(app.Init(logger))
 
 	// Set path prefix/route group
 	r.PathPrefix("v1")
